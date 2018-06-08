@@ -7,6 +7,20 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <DockPanel Grid.Row="1" x:Name="GraphDockPanel"/>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBox x:Name="MessageTextBox" TextWrapping="Wrap" AcceptsReturn="True"></TextBox>
+            <Button Grid.Column="1" x:Name="GenerateGraphFromPruferCode" Content="Dodaj wierzchołek" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5" Click="GenerateGraphFromPruferCode_Click"/>
+        </Grid>
+
     </Grid>
 </Window>

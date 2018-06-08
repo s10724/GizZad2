@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -48,6 +49,11 @@ namespace GizCore
             Vertices.Remove(vertex);
         }
 
+        public void RemoveEdge(VertexCore vertexFirst, VertexCore vertexSecond)
+        {
+            Edges.Remove(vertexFirst.RemoveEdge(vertexSecond));
+        }
+
 
         public bool ConnectVertex(VertexCore vertexFirst, VertexCore vertexSecond)
         {
@@ -90,49 +96,65 @@ namespace GizCore
             return ConnectVertex(FindVertex(vertexFirstIdStr), FindVertex(vertexSecondIdStr));
         }
 
-        public List<int> GeneratePruferCode()
-        {
-            if (Vertices == null || Vertices.Count < 3)
-                return null;
 
-            var list = new List<int>();
-            while (Edges.Count>1)
+
+        public static GraphCore LoadGraphFromFile(string path)
+        {
+            GraphCore graph = new GraphCore();
+
+            var lines = File.ReadLines(path).ToList();
+            int numberOfVertex = 0;
+            int numberOfEdges = 0;
+            if (lines.Count>1)
             {
-                var vertexWithOneDegree = Vertices.Where(x => x.Degree == 1).OrderBy(x => x.Id).FirstOrDefault();
-                list.Add(vertexWithOneDegree.AdjacentVertices[0].Id);
-                Edges.Remove(vertexWithOneDegree.RemoveEdge(vertexWithOneDegree.AdjacentVertices[0]));
+                var splitFirstLine = lines[0].Split(' ');
+                if(splitFirstLine.Length == 2)
+                {
+                    numberOfVertex = int.Parse(splitFirstLine[0]);
+                    numberOfEdges = int.Parse(splitFirstLine[1]);
+                }
+
+                for (int i = 1; i < lines.Count; i++)
+                {
+                    var splitLine = lines[i].Split(' ');
+                    if (splitLine.Length == 2)
+                    { 
+                        graph.ConnectVertex(graph.AddVertexIfNotExist(int.Parse(splitLine[1])), graph.AddVertexIfNotExist(int.Parse(splitLine[0])));
+                    }
+                }
             }
-            DecodePruferCode(list);
-            return list;
+            return graph;
         }
 
 
-        public void DecodePruferCode(List<int> pruferCode)
+
+        private static IEnumerable<CycleCore> FindAllCycles(List<VertexCore> alreadyVisited, VertexCore a)
         {
-            Vertices = new List<VertexCore>();
-            Edges = new List<EdgeCore>();
-
-            List<int> p = pruferCode.ToList();
-            List<int> v = new List<int>();
-            for (int i = 0; i < pruferCode.Count + 2; i++)
+            foreach (EdgeCore e in a.Edges)
             {
-                v.Add(i+1);
-            }
-
-            while (true)
-            {
-                int i = v.Except(p).Min();
-                ConnectVertex(AddVertexIfNotExist(i), AddVertexIfNotExist(p[0]));
-                p.Remove(p[0]);
-                v.Remove(i);
-
-                if(p.Count==0)
+                if (alreadyVisited.Contains(e.Second))
+                    yield return new CycleCore(e);
+                else
                 {
-                    ConnectVertex(AddVertexIfNotExist(v[0]), AddVertexIfNotExist(v[1]));
-                    return;
+                    List<VertexCore> newSet = new List<VertexCore>(alreadyVisited);
+                    newSet.Add(e.Second);
+                    foreach (CycleCore c in FindAllCycles(newSet, e.Second))
+                    {
+                        c.Build(e);
+                        yield return c;
+                    }
                 }
             }
         }
 
+        public bool IsAnyCycleExist()
+        {
+            List<VertexCore> alreadyVisited = new List<VertexCore>();
+            alreadyVisited.Add(Vertices.First());
+            var cycles = FindAllCycles(alreadyVisited, Vertices.First()).ToList();
+            cycles.ForEach(x => Debug.WriteLine(x));
+            return cycles.Count>0;
+        }
     }
+
 }

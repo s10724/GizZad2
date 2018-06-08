@@ -35,13 +35,8 @@ namespace GizCore
 
 
             this.Edges.Add(edge);
-            vertex.Edges.Add(edge);
-
             this.AdjacentVertices.Add(vertex);
-            vertex.AdjacentVertices.Add(this);
-
             this.Degree = this.AdjacentVertices.Count;
-            vertex.Degree = vertex.AdjacentVertices.Count;
 
 
             return edge;

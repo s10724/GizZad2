@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CycleCore.cs" />
     <Compile Include="EdgeCore.cs" />
     <Compile Include="GraphCore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
