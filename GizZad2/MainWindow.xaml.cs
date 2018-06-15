@@ -1,6 +1,7 @@
 ﻿using GizCore;
 using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.WpfGraphControl;
+using Microsoft.Win32;
 using System;
 using System.Diagnostics;
 using System.Linq;
@@ -20,7 +21,6 @@ namespace GizZad2
         public MainWindow()
         {
             InitializeComponent();
-            GenerateStartGraph();
             Loaded += MainWindow_Loaded;
         }
 
@@ -34,7 +34,6 @@ namespace GizZad2
             graphViewer.MouseUp += GraphViewer_MouseUp;
 
 
-            DrawGraph();
         }
 
 
@@ -132,12 +131,15 @@ namespace GizZad2
             MessageTextBox.Text = graph.IsAnyCycleExist() ? "NIE" : "TAK";
 
         }
-
-        private void GenerateStartGraph()
+        private void Button_Click(object sender, RoutedEventArgs e)
         {
-            graph = GraphCore.LoadGraphFromFile(@"E:/bez cyklu.txt");
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            if (openFileDialog.ShowDialog() == true)
+            {
+                graph = GraphCore.LoadGraphFromFile(openFileDialog.FileName);
+
+                DrawGraph();
+            }
         }
-
-
     }
 }

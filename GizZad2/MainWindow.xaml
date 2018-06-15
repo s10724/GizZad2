@@ -17,9 +17,11 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <TextBox x:Name="MessageTextBox" TextWrapping="Wrap" AcceptsReturn="True"></TextBox>
-            <Button Grid.Column="1" x:Name="GenerateGraphFromPruferCode" Content="Dodaj wierzchołek" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5" Click="GenerateGraphFromPruferCode_Click"/>
+            <Button Grid.Column="1" Margin="3" x:Name="GenerateGraphFromPruferCode" Content="Dodaj wierzchołek"  Click="GenerateGraphFromPruferCode_Click"/>
+            <Button Grid.Column="2" Margin="3" Click="Button_Click">Wybierz plik</Button>
         </Grid>
 
     </Grid>
