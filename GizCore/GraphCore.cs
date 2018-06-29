@@ -51,7 +51,8 @@ namespace GizCore
 
         public void RemoveEdge(VertexCore vertexFirst, VertexCore vertexSecond)
         {
-            Edges.Remove(vertexFirst.RemoveEdge(vertexSecond));
+            if(vertexFirst!=null && vertexSecond!=null)
+                Edges.Remove(vertexFirst.RemoveEdge(vertexSecond));
         }
 
 

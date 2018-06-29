@@ -44,6 +44,7 @@
     <Compile Include="EdgeCore.cs" />
     <Compile Include="GraphCore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TopologicalSorting.cs" />
     <Compile Include="VertexCore.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
